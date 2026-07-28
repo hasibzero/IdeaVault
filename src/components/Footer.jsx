@@ -5,10 +5,10 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#f4f7fb] dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 pt-16 pb-12 px-6 lg:px-12 mt-auto">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 md:gap-24">
+    <footer className="w-full bg-[#f4f7fb] dark:bg-gray-950  border-gray-200 dark:border-gray-800 pt-16 pb-12 px-6 lg:px-12 mt-auto">
+      <hr className='max-w-7xl mx-auto pb-10'/>
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 md:gap-24 ">
         
-        {/* Left Section: Brand & Info */}
         <div className="flex flex-col max-w-sm">
           <Link 
             href="/" 
@@ -24,10 +24,8 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Right Section: Navigation Links */}
         <div className="flex gap-16 sm:gap-24 md:pr-12">
           
-          {/* Column 1 */}
           <div className="flex flex-col gap-5">
             <Link 
               href="/ideas" 
@@ -43,7 +41,6 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Column 2 */}
           <div className="flex flex-col gap-5">
             <Link 
               href="/contact" 

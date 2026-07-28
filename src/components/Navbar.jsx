@@ -23,7 +23,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="w-full bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 px-1 sm:px-6 lg:px-12">
+    <nav className="w-full bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 px-1 sm:px-6 lg:px-12 ">
       <div className="flex items-center justify-between pt-1 pb-2">
         
         <Link 
@@ -79,7 +79,6 @@ export default function Navbar() {
             
         </div>
 
-          {/* Mobile Menu Toggle Button */}
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-1 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white focus:outline-none"
@@ -91,7 +90,6 @@ export default function Navbar() {
 
       </div>
 
-      {/* Mobile Navigation Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-gray-200 dark:border-gray-800 py-4 flex flex-col gap-3">
           {navLinks.map((link) => {
@@ -113,7 +111,6 @@ export default function Navbar() {
             );
           })}
           
-          {/* Mobile-only Login/Register Button */}
           <div className="pt-2 sm:hidden">
             <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-2.5 rounded-md font-medium text-sm transition-colors">
               Login/Register
