@@ -18,7 +18,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Ideas', href: '/ideas' },
-    { name: 'Add Idea', href: '/add-idea' },
+    { name: 'Add Idea', href: '/ideas/new' },
     { name: 'My Ideas', href: '/my-ideas' },
   ];
 
@@ -75,7 +75,7 @@ export default function Navbar() {
     </DropdownMenu>
 
         <div className="flex ">
-            <Button className="rounded-full">Login/Register <UserCircle/></Button>
+            <Button variant='login' className="rounded-full">Login/Register <UserCircle/></Button>
             
         </div>
 
@@ -112,9 +112,9 @@ export default function Navbar() {
           })}
           
           <div className="pt-2 sm:hidden">
-            <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-2.5 rounded-md font-medium text-sm transition-colors">
+            <Button className="font-medium text-sm transition-colors">
               Login/Register
-            </button>
+            </Button>
           </div>
         </div>
       )}
