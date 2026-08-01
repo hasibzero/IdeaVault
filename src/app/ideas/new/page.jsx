@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
 import { Info, FileText, LayoutTemplate, Link as LinkIcon, Send } from 'lucide-react';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 export default function AddNewIdeaPage() {
-  const [formData, setFormData] = useState({
+  const formData={
     title: '',
     category: '',
     budget: '',
@@ -15,18 +15,37 @@ export default function AddNewIdeaPage() {
     details: '',
     targetAudience: '',
     tags: '',
-    coverImage: ''
-  });
+    coverImage: '',
+
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+
+
+  
+
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Form Submitted: ", formData);
-    // Add your API POST request here later
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas`, {
+    method: "POST", 
+    headers: {
+      "Content-Type": "application/json", 
+    },
+    body: JSON.stringify(formData)
+  });
+
+  if (response.ok) {
+    toast("Idea submitted successfully!");
+  }
+
+
   };
 
   return (
@@ -232,12 +251,7 @@ export default function AddNewIdeaPage() {
               By submitting, you agree to the <Link href="/guidelines" className="text-blue-600 hover:underline">Guidelines</Link>.
             </p>
             <div className="flex w-full sm:w-auto gap-3">
-              <button 
-                type="button" 
-                className="flex-1 sm:flex-none px-6 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-              >
-                Save Draft
-              </button>
+              
               <button 
                 type="submit" 
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-semibold text-sm rounded-lg transition-colors shadow-sm"

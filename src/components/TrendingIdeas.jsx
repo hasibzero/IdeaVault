@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import FeaturedIdeasPage from './FeaturedIdeas';
+import Link from 'next/link';
 
 export default function TrendingIdeas() {
   return (
@@ -25,7 +26,9 @@ export default function TrendingIdeas() {
         </div>
         
         <Button variant="outline" className="cursor-pointer rounded-full px-6 border-gray-300 text-gray-700 dark:border-gray-700 dark:text-gray-300">
+          <Link href="/ideas" className="flex items-center gap-2">
           View All <ArrowRight className="w-4 h-4 ml-2" />
+          </Link>
         </Button>
 
         

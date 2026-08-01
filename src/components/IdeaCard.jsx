@@ -30,7 +30,7 @@ export default function IdeaCard({ idea }) {
       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-snug">
         {project.title}
       </h3>
-      <p className="text-sm text-gray-500 mb-5 line-clamp-3 leading-relaxed">
+      <p className="text-sm dark:text-gray-200 mb-5 line-clamp-3 leading-relaxed">
         {project.tagline}
       </p>
 
@@ -62,7 +62,7 @@ export default function IdeaCard({ idea }) {
 
         <Link 
           href={`/ideas/${idea._id || '#'}`} 
-          className="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center transition-colors"
+          className="text-sm font-semibold dark:text-blue-400 text-blue-600 dark:hover:text-white hover:text-blue-800 flex items-center transition-colors"
         >
           View Details <ArrowRight className="w-4 h-4 ml-1" />
         </Link>
