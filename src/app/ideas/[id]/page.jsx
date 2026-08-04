@@ -51,10 +51,12 @@ export default async function IdeaDetailsPage({params}) {
                 {primaryBadge}
           
             </span>
+            {secondBadge && (
             <span className={`text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wider ${getBadgeColor(primaryBadge)}`}>
                 {secondBadge}
           
             </span>
+          )}
         </div>
         
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4 leading-tight">
@@ -82,7 +84,6 @@ export default async function IdeaDetailsPage({params}) {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shadow-sm">
               <ThumbsUp className="w-4 h-4" /> {metadata.engagement.likes}
@@ -123,7 +124,6 @@ export default async function IdeaDetailsPage({params}) {
             
           </div>
 
-          {/* Audience & Budget Split */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm">
               <div className="flex items-center gap-2 mb-3">
@@ -150,7 +150,7 @@ export default async function IdeaDetailsPage({params}) {
 
           {/* Discussion Section */}
           <div>
-            <h3 className="text-xl font-extrabold text-gray-900 dark:text-white mb-6">Discussion (2)</h3>
+            <h3 className="text-xl font-extrabold text-gray-900 dark:text-white mb-6">Discussion ({idea?.discussion_summary.length})</h3>
             
             {/* Input Area */}
             <div className="flex gap-4 mb-8">
