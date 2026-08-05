@@ -24,7 +24,6 @@ import { authClient } from "@/lib/auth-client";
 
 export default function Navbar() {
   const { data: session, isPending } = authClient.useSession();
-  console.log("Session data:", session); // Log the session data to see its structure
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

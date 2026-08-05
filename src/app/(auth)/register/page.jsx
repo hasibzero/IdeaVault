@@ -34,11 +34,12 @@ export default function RegisterPage() {
     const router = useRouter();
     
       const session = authClient.useSession();
-      console.log("Session data:", session);
-    
-      if (session?.data?.user) {
-        router.push("/");
-      }
+
+      React.useEffect(() => {
+        if (session?.data?.user) {
+          router.replace("/");
+        }
+      }, [router, session?.data?.user]);
     
   
     return (

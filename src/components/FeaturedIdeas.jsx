@@ -14,7 +14,6 @@ export default async function FeaturedIdeasPage() {
     cache: 'no-store',
   });
   const ideas = await res.json();
-  console.log('Featured Ideas:', ideas);
   return (
     <div className="w-full pt-10 pb-16">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">

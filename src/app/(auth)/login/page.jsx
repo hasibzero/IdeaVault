@@ -34,7 +34,6 @@ export default function LoginPage() {
   const router = useRouter();
 
   const session = authClient.useSession();
-  console.log("Session data:", session);
 
   useEffect(() => {
     if (session?.data?.user) {
