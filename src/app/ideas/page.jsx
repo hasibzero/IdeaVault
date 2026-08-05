@@ -5,18 +5,16 @@ import { Filter, Search } from "lucide-react";
 import IdeaCard from "@/components/IdeaCard";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
-import { useSearchParams } from "next/navigation";
 
-export default function IdeasPage() {
-  const searchParams = useSearchParams();
+export default function IdeasPage({ searchParams }) {
   const { data: session, isPending: isSessionPending } = authClient.useSession();
   const [ideas, setIdeas] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const search = searchParams.get("search") || "";
-  const category = searchParams.get("category") || "All Categories";
-  const time = searchParams.get("time") || "Any Time";
+  const search = searchParams?.search || "";
+  const category = searchParams?.category || "All Categories";
+  const time = searchParams?.time || "Any Time";
 
   useEffect(() => {
     async function fetchData() {
