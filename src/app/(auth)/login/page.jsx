@@ -1,9 +1,10 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Button } from "@base-ui/react/button";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 // import React from 'react';
 
 export default function LoginPage() {
@@ -29,6 +30,18 @@ export default function LoginPage() {
       provider: "google",
     });
   };
+
+  const router = useRouter();
+
+  const session = authClient.useSession();
+  console.log("Session data:", session);
+
+  useEffect(() => {
+    if (session?.data?.user) {
+      router.replace("/");
+    }
+  }, [router, session?.data?.user]);
+
 
   return (
     <AuthLayout activeTab="login">
@@ -79,11 +92,11 @@ export default function LoginPage() {
       </form>
       {/* Divider */}
       <div className="relative flex items-center py-4 my-2">
-        <div className="flex-grow border-t border-gray-200"></div>
-        <span className="flex-shrink-0 mx-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+        <div className="grow border-t border-gray-200"></div>
+        <span className="shrink-0 mx-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
           Or continue with
         </span>
-        <div className="flex-grow border-t border-gray-200"></div>
+        <div className="grow border-t border-gray-200"></div>
       </div>
 
       {/* Google Button */}

@@ -3,6 +3,7 @@ import AuthLayout from '@/components/AuthLayout';
 // import { Button } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
 import { Button } from '@base-ui/react/button';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import toast from 'react-hot-toast';
 
@@ -29,6 +30,15 @@ export default function RegisterPage() {
             provider: "google",
     });
     };
+
+    const router = useRouter();
+    
+      const session = authClient.useSession();
+      console.log("Session data:", session);
+    
+      if (session?.data?.user) {
+        router.push("/");
+      }
     
   
     return (

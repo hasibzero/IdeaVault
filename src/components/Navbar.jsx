@@ -33,7 +33,9 @@ export default function Navbar() {
     { name: "Ideas", href: "/ideas" },
     { name: "Add Idea", href: "/ideas/new" },
     { name: "My Ideas", href: "/my-ideas" },
-    { name: "My Bookmarks", href: "/my-bookmarks" },
+    // --- COMMENTS & INTERACTIONS (UPDATED CODE) ---
+    { name: "My Interactions", href: "/my-interactions" },
+    // --- END OF COMMENTS & INTERACTIONS (UPDATED CODE) ---
   ];
   const router = useRouter();
   const handleLogout = async () => {
@@ -110,7 +112,9 @@ export default function Navbar() {
                 <DropdownMenuContent className="w-32 ">
                   <DropdownMenuGroup>
                     <DropdownMenuItem className="cursor-pointer">
+                      <Link href="/profile" className="flex items-center gap-2"> 
                       Profile
+                      </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />

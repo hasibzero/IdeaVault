@@ -8,9 +8,11 @@ import { authClient } from "@/lib/auth-client"; // Adjust path if needed
 
 const getBadgeColor = (badgeText) => {
   const text = badgeText?.toUpperCase() || "";
-  if (text.includes("AI") || text.includes("EDTECH")) return "bg-green-100 text-green-700";
+  if (text.includes("AI") || text.includes("EDTECH"))
+    return "bg-green-100 text-green-700";
   if (text.includes("HEALTH")) return "bg-orange-100 text-orange-700";
-  if (text.includes("FINTECH") || text.includes("SAAS")) return "bg-blue-100 text-blue-700";
+  if (text.includes("FINTECH") || text.includes("SAAS"))
+    return "bg-blue-100 text-blue-700";
   return "bg-gray-100 text-gray-700";
 };
 
@@ -21,14 +23,12 @@ export default function IdeaCard({ idea }) {
   const { project, metadata } = idea;
   const primaryBadge = project?.badges?.[0] || "GENERAL";
 
-
   const [bookmarks, setBookmarks] = useState(idea?.bookmarks || []);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
-
-  const isBookmarked = currentUserId ? bookmarks.includes(currentUserId) : false;
-
+  const isBookmarked = currentUserId
+    ? bookmarks.includes(currentUserId)
+    : false;
 
   const handleBookmarkToggle = async () => {
     if (!currentUserId) {
@@ -52,13 +52,16 @@ export default function IdeaCard({ idea }) {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId: currentUserId }),
-        }
+          // MUST be included so the browser sends your JWT cookie!
+          credentials: "include",
+        },
       );
 
       if (response.ok) {
         toast.success(isBookmarked ? "Removed bookmark" : "Bookmarked idea!");
       } else {
-
+        const text = await response.text().catch(() => null);
+        console.error("Bookmark failed:", response.status, text);
         setBookmarks(bookmarks);
         toast.error("Failed to update bookmark.");
       }
@@ -76,12 +79,11 @@ export default function IdeaCard({ idea }) {
       <div className="flex justify-between items-start mb-4">
         <span
           className={`text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wider ${getBadgeColor(
-            primaryBadge
+            primaryBadge,
           )}`}
         >
           {primaryBadge}
         </span>
-
 
         <button
           onClick={handleBookmarkToggle}

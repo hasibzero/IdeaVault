@@ -28,7 +28,7 @@ export default function AddNewIdeaPage() {
 
     const apiPayload = {
       project: {
-        title: form.get("title"), // form.get looks at the name="title" attribute!
+        title: form.get("title"), 
         tagline: form.get("shortDescription"),
         badges: tagsArray.slice(0, 2).map((tag) => tag.toUpperCase()),
         cover_image:
@@ -63,13 +63,13 @@ export default function AddNewIdeaPage() {
     };
 
     try {
-      // 5. Send the perfectly formatted payload to your Express backend
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(apiPayload),
+        credentials: "include", 
       });
 
       if (response.ok) {
