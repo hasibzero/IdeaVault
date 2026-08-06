@@ -1,25 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Filter, Search } from "lucide-react";
 import IdeaCard from "@/components/IdeaCard";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
 
-export default function IdeasPage({ searchParams }) {
-  const { data: session, isPending: isSessionPending } = authClient.useSession();
+function IdeasContent() {
+  const searchParams = useSearchParams();
   const [ideas, setIdeas] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const search = searchParams?.search || "";
-  const category = searchParams?.category || "All Categories";
-  const time = searchParams?.time || "Any Time";
+  const search = searchParams.get("search") || "";
+  const category = searchParams.get("category") || "All Categories";
+  const time = searchParams.get("time") || "Any Time";
 
   useEffect(() => {
     async function fetchData() {
-      const token = session?.accessToken ?? session?.token ?? "";
-
       const queryParams = new URLSearchParams();
       if (search) queryParams.append("search", search);
       if (category && category !== "All Categories") {
@@ -31,13 +29,10 @@ export default function IdeasPage({ searchParams }) {
 
       try {
         const [ideasRes, categoriesRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas?${queryParams.toString()}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            credentials: "include",
-            cache: "no-store",
-          }),
+          fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/ideas?${queryParams.toString()}`,
+            { cache: "no-store" }
+          ),
           fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, {
             cache: "no-store",
           }),
@@ -65,10 +60,8 @@ export default function IdeasPage({ searchParams }) {
       }
     }
 
-    if (!isSessionPending) {
-      fetchData();
-    }
-  }, [category, isSessionPending, search, session?.accessToken, session?.token, time]);
+    fetchData();
+  }, [category, search, time]);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen">
@@ -138,7 +131,7 @@ export default function IdeasPage({ searchParams }) {
       ) : ideas.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {ideas.map((idea, index) => (
-            <IdeaCard key={index} idea={idea} />
+            <IdeaCard key={idea._id ?? index} idea={idea} />
           ))}
         </div>
       ) : (
@@ -147,11 +140,25 @@ export default function IdeasPage({ searchParams }) {
             No ideas found
           </p>
           <p className="text-gray-500 dark:text-gray-400 text-center max-w-md">
-            We couldn't find any ideas matching your current filters. Try
+            We couldn&apos;t find any ideas matching your current filters. Try
             adjusting your search or category!
           </p>
         </div>
       )}
     </div>
+  );
+}
+
+export default function IdeasPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full py-16 flex items-center justify-center text-gray-500 dark:text-gray-400">
+          Loading ideas...
+        </div>
+      }
+    >
+      <IdeasContent />
+    </Suspense>
   );
 }

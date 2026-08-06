@@ -69,16 +69,36 @@ export default function MyInteractions() {
 
     async function fetchInteractions() {
       try {
-        const token = session?.accessToken ?? session?.token ?? "";
+        // Get the access token — try multiple sources from better-auth jwtClient
+        let token = "";
+        try {
+          const freshSession = await authClient.getSession();
+          token =
+            freshSession?.data?.session?.token ??
+            freshSession?.data?.accessToken ??
+            session?.session?.token ??
+            session?.accessToken ??
+            "";
+        } catch {
+          token = session?.session?.token ?? session?.accessToken ?? "";
+        }
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas/interactions/my?userId=${currentUserId}`, {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : undefined,
-          },
-          credentials: "include",
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/ideas/interactions/my`,
+          {
+            headers: {
+              Authorization: token ? `Bearer ${token}` : "",
+            },
+            credentials: "include",
+          }
+        );
+
+        if (!res.ok) {
+          console.error("Interactions fetch failed:", res.status);
+          return;
+        }
+
         const data = await res.json();
-
         setBookmarks(data?.bookmarks || []);
         setComments(data?.comments || []);
       } catch (error) {
@@ -89,7 +109,8 @@ export default function MyInteractions() {
     }
 
     fetchInteractions();
-  }, [currentUserId, isSessionPending, session?.accessToken, session?.token]);
+  }, [currentUserId, isSessionPending, session]);
+
 
   // Remove a bookmarked idea
   const handleRemoveBookmark = async (ideaId) => {
