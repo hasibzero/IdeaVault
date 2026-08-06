@@ -17,6 +17,30 @@ function IdeasContent() {
   const time = searchParams.get("time") || "Any Time";
 
   useEffect(() => {
+    async function loadAllCategories() {
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
+      try {
+        const res = await fetch(`${baseUrl}/categories`, { cache: "no-store" });
+        if (res.ok) {
+          const cats = await res.json();
+          if (Array.isArray(cats)) {
+            setCategoriesList((prev) =>
+              Array.from(new Set([...prev, ...cats])).filter(Boolean).sort()
+            );
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      }
+    }
+
+    loadAllCategories();
+  }, []);
+
+  useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
       const queryParams = new URLSearchParams();
@@ -61,12 +85,18 @@ function IdeasContent() {
           .map((item) => item?.metadata?.category || item?.category || item?.project?.category)
           .filter(Boolean);
 
-        const dynamicCategories = Array.from(
-          new Set([...normalizedCategories, ...categoriesFromIdeas])
-        ).sort();
-
         setIdeas(normalizedIdeas);
-        setCategoriesList(dynamicCategories);
+        setCategoriesList((prevCategories) =>
+          Array.from(
+            new Set([
+              ...prevCategories,
+              ...normalizedCategories,
+              ...categoriesFromIdeas,
+            ])
+          )
+            .filter(Boolean)
+            .sort()
+        );
       } catch (error) {
         console.error("Failed to load ideas:", error);
       } finally {
