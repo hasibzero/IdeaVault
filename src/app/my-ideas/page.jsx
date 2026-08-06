@@ -28,6 +28,16 @@ export default function MyIdeasDashboard() {
 
   const currentUserId = session?.user?.id;
 
+  // Helper: get JWT access token from better-auth jwtClient plugin
+  const getToken = async () => {
+    try {
+      const result = await authClient.token();
+      return result?.data?.token || "";
+    } catch {
+      return "";
+    }
+  };
+
   const openEditModal = (idea) => {
     setEditingIdea(idea);
     setEditForm({
@@ -59,14 +69,10 @@ export default function MyIdeasDashboard() {
 
   useEffect(() => {
     async function getIdeas() {
-      const token = session?.accessToken ?? session?.token ?? "";
-
       try {
+        // /ideas is now public — no auth needed for listing
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas`, {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : undefined,
-          },
-          credentials: "include",
+          cache: "no-store",
         });
         const data = await res.json();
         const normalizedIdeas = Array.isArray(data)
@@ -84,15 +90,16 @@ export default function MyIdeasDashboard() {
     if (!isSessionPending && currentUserId) {
       getIdeas();
     }
-  }, [currentUserId, isSessionPending, session?.accessToken, session?.token]);
+  }, [currentUserId, isSessionPending]);
 
   // --- DELETE FUNCTION ---
   const handleDelete = async (ideaId) => {
     try {
+      const token = await getToken();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${session?.accessToken ?? session?.token ?? ""}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         credentials: "include",
       });
@@ -158,11 +165,12 @@ export default function MyIdeasDashboard() {
     setIsSavingEdit(true);
 
     try {
+      const token = await getToken();
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas/${editingIdea._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : undefined,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         credentials: "include",
         body: JSON.stringify(payload),

@@ -109,11 +109,20 @@ export default function IdeaDetailsPage({ params }) {
     setBookmarks(updatedBookmarks);
 
     try {
+      let token = "";
+      try {
+        const result = await authClient.token();
+        token = result?.data?.token || "";
+      } catch {}
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/ideas/${idea._id}/bookmark`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
           body: JSON.stringify({ userId: currentUserId }),
           credentials: "include",
         }
@@ -146,13 +155,19 @@ export default function IdeaDetailsPage({ params }) {
     }
     setIsSubmitting(true);
     try {
+      let token = "";
+      try {
+        const result = await authClient.token();
+        token = result?.data?.token || "";
+      } catch {}
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/ideas/${idea._id}/comments`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.accessToken ?? session?.token ?? ""}`,
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify({ comment: newComment }),
           credentials: "include",

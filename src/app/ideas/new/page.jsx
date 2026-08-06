@@ -63,10 +63,17 @@ export default function AddNewIdeaPage() {
     };
 
     try {
+      let token = "";
+      try {
+        const result = await authClient.token();
+        token = result?.data?.token || "";
+      } catch {}
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify(apiPayload),
         credentials: "include", 

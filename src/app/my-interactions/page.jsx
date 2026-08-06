@@ -62,6 +62,16 @@ export default function MyInteractions() {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editText, setEditText] = useState("");
 
+  // Helper: get JWT access token from better-auth jwtClient plugin
+  const getToken = async () => {
+    try {
+      const result = await authClient.token();
+      return result?.data?.token || "";
+    } catch {
+      return "";
+    }
+  };
+
   // --- COMMENTS & INTERACTIONS ---
   // Fetch bookmarked ideas and comments on load
   useEffect(() => {
@@ -69,19 +79,7 @@ export default function MyInteractions() {
 
     async function fetchInteractions() {
       try {
-        // Get the access token — try multiple sources from better-auth jwtClient
-        let token = "";
-        try {
-          const freshSession = await authClient.getSession();
-          token =
-            freshSession?.data?.session?.token ??
-            freshSession?.data?.accessToken ??
-            session?.session?.token ??
-            session?.accessToken ??
-            "";
-        } catch {
-          token = session?.session?.token ?? session?.accessToken ?? "";
-        }
+        const token = await authClient.token().then(r => r?.data?.token || "").catch(() => "");
 
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/ideas/interactions/my`,
@@ -94,7 +92,7 @@ export default function MyInteractions() {
         );
 
         if (!res.ok) {
-          console.error("Interactions fetch failed:", res.status);
+          console.error("Interactions fetch failed:", res.status, await res.text().catch(() => ""));
           return;
         }
 
@@ -109,19 +107,20 @@ export default function MyInteractions() {
     }
 
     fetchInteractions();
-  }, [currentUserId, isSessionPending, session]);
+  }, [currentUserId, isSessionPending]);
 
 
   // Remove a bookmarked idea
   const handleRemoveBookmark = async (ideaId) => {
     try {
+      const token = await getToken();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}/bookmark`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.accessToken ?? session?.token ?? ""}`,
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify({ userId: currentUserId }),
           credentials: "include",
@@ -153,13 +152,14 @@ export default function MyInteractions() {
     }
 
     try {
+      const token = await getToken();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}/comments/${commentId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.accessToken ?? session?.token ?? ""}`,
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify({ comment: editText }),
           credentials: "include",
@@ -188,12 +188,13 @@ export default function MyInteractions() {
     if (!confirm("Are you sure you want to delete this comment?")) return;
 
     try {
+      const token = await getToken();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}/comments/${commentId}`,
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${session?.accessToken ?? session?.token ?? ""}`,
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           credentials: "include",
         }

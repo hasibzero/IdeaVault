@@ -46,13 +46,22 @@ export default function IdeaCard({ idea }) {
     setBookmarks(updatedBookmarks);
 
     try {
+      // Get JWT access token from better-auth jwtClient plugin
+      let token = "";
+      try {
+        const result = await authClient.token();
+        token = result?.data?.token || "";
+      } catch {}
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/ideas/${idea._id}/bookmark`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
           body: JSON.stringify({ userId: currentUserId }),
-          // MUST be included so the browser sends your JWT cookie!
           credentials: "include",
         },
       );
