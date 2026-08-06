@@ -28,19 +28,26 @@ function IdeasContent() {
         queryParams.append("time", time);
       }
 
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       try {
-        const [ideasRes, categoriesRes] = await Promise.all([
-          fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/ideas?${queryParams.toString()}`,
-            { cache: "no-store" }
-          ),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, {
+        const [ideasResult, categoriesResult] = await Promise.allSettled([
+          fetch(`${baseUrl}/ideas?${queryParams.toString()}`, {
             cache: "no-store",
-          }),
+          }).then((r) => (r.ok ? r.json() : null)),
+          fetch(`${baseUrl}/categories`, { cache: "no-store" }).then((r) =>
+            r.ok ? r.json() : null
+          ),
         ]);
 
-        const ideasResponse = await ideasRes.json().catch(() => null);
-        const categoriesResponse = await categoriesRes.json().catch(() => null);
+        const ideasResponse =
+          ideasResult.status === "fulfilled" ? ideasResult.value : null;
+        const categoriesResponse =
+          categoriesResult.status === "fulfilled"
+            ? categoriesResult.value
+            : null;
 
         const normalizedIdeas = Array.isArray(ideasResponse)
           ? ideasResponse
@@ -51,11 +58,11 @@ function IdeasContent() {
           : categoriesResponse?.categories ?? categoriesResponse?.data ?? [];
 
         setIdeas(normalizedIdeas);
-        setCategoriesList(normalizedCategories);
+        if (normalizedCategories.length > 0) {
+          setCategoriesList(normalizedCategories);
+        }
       } catch (error) {
         console.error("Failed to load ideas:", error);
-        setIdeas([]);
-        setCategoriesList([]);
       } finally {
         setIsLoading(false);
       }
@@ -126,8 +133,27 @@ function IdeasContent() {
       </div>
 
       {isLoading ? (
-        <div className="w-full py-16 flex items-center justify-center text-gray-500 dark:text-gray-400">
-          Loading ideas...
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <div
+              key={n}
+              className="h-72 rounded-2xl bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 animate-pulse p-6 flex flex-col justify-between"
+            >
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="h-5 w-20 bg-gray-200 dark:bg-gray-800 rounded-md" />
+                  <div className="h-5 w-5 bg-gray-200 dark:bg-gray-800 rounded-full" />
+                </div>
+                <div className="h-7 w-3/4 bg-gray-200 dark:bg-gray-800 rounded-md" />
+                <div className="h-4 w-full bg-gray-200 dark:bg-gray-800 rounded-md" />
+                <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-800 rounded-md" />
+              </div>
+              <div className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-800">
+                <div className="h-8 w-8 bg-gray-200 dark:bg-gray-800 rounded-full" />
+                <div className="h-4 w-24 bg-gray-200 dark:bg-gray-800 rounded-md" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : ideas.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
@@ -154,8 +180,15 @@ export default function IdeasPage() {
   return (
     <Suspense
       fallback={
-        <div className="w-full py-16 flex items-center justify-center text-gray-500 dark:text-gray-400">
-          Loading ideas...
+        <div className="w-full max-w-7xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-16">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div
+                key={n}
+                className="h-72 rounded-2xl bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 animate-pulse p-6"
+              />
+            ))}
+          </div>
         </div>
       }
     >
