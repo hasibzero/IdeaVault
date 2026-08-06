@@ -57,10 +57,16 @@ function IdeasContent() {
           ? categoriesResponse
           : categoriesResponse?.categories ?? categoriesResponse?.data ?? [];
 
+        const categoriesFromIdeas = normalizedIdeas
+          .map((item) => item?.metadata?.category || item?.category || item?.project?.category)
+          .filter(Boolean);
+
+        const dynamicCategories = Array.from(
+          new Set([...normalizedCategories, ...categoriesFromIdeas])
+        ).sort();
+
         setIdeas(normalizedIdeas);
-        if (normalizedCategories.length > 0) {
-          setCategoriesList(normalizedCategories);
-        }
+        setCategoriesList(dynamicCategories);
       } catch (error) {
         console.error("Failed to load ideas:", error);
       } finally {
@@ -103,7 +109,9 @@ function IdeasContent() {
             defaultValue={category}
             className="w-full md:w-48 px-4 py-2.5 border border-gray-300 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-950 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 cursor-pointer appearance-none transition-all"
           >
-            <option value="All Categories">All Categories</option>
+            <option value="All Categories">
+              {isLoading ? "Loading categories..." : "All Categories"}
+            </option>
             {categoriesList.map((cat, index) => (
               <option key={index} value={cat}>
                 {cat}
