@@ -132,7 +132,12 @@ export default function IdeaCard({ idea }) {
         <div className="flex -space-x-2">
           {project?.author?.avatar ? (
             <img
-              src={project.author.avatar}
+              key={project.author.avatar}
+              src={
+                project.author.avatar.startsWith("data:") || project.author.avatar.startsWith("blob:")
+                  ? project.author.avatar
+                  : `${project.author.avatar}${project.author.avatar.includes("?") ? "&" : "?"}nocache=1`
+              }
               alt={project?.author?.name || "Author"}
               className="w-8 h-8 rounded-full ring-2 ring-white dark:ring-gray-900 object-cover"
             />

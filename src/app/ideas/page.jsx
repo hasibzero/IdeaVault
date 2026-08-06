@@ -18,6 +18,7 @@ function IdeasContent() {
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       const queryParams = new URLSearchParams();
       if (search) queryParams.append("search", search);
       if (category && category !== "All Categories") {

@@ -72,15 +72,27 @@ export default function IdeaDetailsPage({ params }) {
 
   useEffect(() => {
     async function fetchIdea() {
+      setIsLoading(true);
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas/${id}`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas/${id}`, {
           credentials: "include",
         });
+
+        if (!res.ok) {
+          setIdea(null);
+          return;
+        }
+
         const data = await res.json();
-        setIdea(data);
-        setBookmarks(data?.bookmarks || []);
+        if (data && data.project) {
+          setIdea(data);
+          setBookmarks(data?.bookmarks || []);
+        } else {
+          setIdea(null);
+        }
       } catch (error) {
         console.error("Error fetching idea:", error);
+        setIdea(null);
       } finally {
         setIsLoading(false);
       }
@@ -206,12 +218,19 @@ export default function IdeaDetailsPage({ params }) {
 
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading Idea...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-500 font-medium">
+        Loading Idea...
+      </div>
+    );
   }
 
-
-  if (!idea) {
-    return <div className="min-h-screen flex items-center justify-center">Idea not found.</div>;
+  if (!idea || !idea.project) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-500 font-medium">
+        Idea not found.
+      </div>
+    );
   }
 
   const { project, metadata, deep_dive } = idea;
@@ -257,10 +276,12 @@ export default function IdeaDetailsPage({ params }) {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-3">
             <Image
+              key={project?.author?.avatar}
               src={project?.author?.avatar || "https://i.pravatar.cc/150?u=default"}
               height={40}
               width={40}
               alt={project?.author?.name || "Author Avatar"}
+              unoptimized={true}
               className="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700"
             />
             <div>

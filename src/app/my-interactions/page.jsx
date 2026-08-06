@@ -75,9 +75,8 @@ export default function MyInteractions() {
   // --- COMMENTS & INTERACTIONS ---
   // Fetch bookmarked ideas and comments on load
   useEffect(() => {
-    if (isSessionPending || !currentUserId) return;
-
     async function fetchInteractions() {
+      setIsLoading(true);
       try {
         const token = await authClient.token().then(r => r?.data?.token || "").catch(() => "");
 
@@ -106,7 +105,13 @@ export default function MyInteractions() {
       }
     }
 
-    fetchInteractions();
+    if (!isSessionPending) {
+      if (currentUserId) {
+        fetchInteractions();
+      } else {
+        setIsLoading(false);
+      }
+    }
   }, [currentUserId, isSessionPending]);
 
 
@@ -217,6 +222,23 @@ export default function MyInteractions() {
     return (
       <div className="w-full max-w-5xl mx-auto px-4 py-24 min-h-screen flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  if (!currentUserId) {
+    return (
+      <div className="w-full max-w-5xl mx-auto px-4 py-24 min-h-screen flex flex-col items-center justify-center text-center">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Please Log In</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-6">
+          You need to sign in to view your comments and bookmarked ideas.
+        </p>
+        <Link
+          href="/login"
+          className="px-6 py-3 bg-blue-600 text-white font-semibold text-sm rounded-xl hover:bg-blue-700 transition-colors"
+        >
+          Sign In Now
+        </Link>
       </div>
     );
   }

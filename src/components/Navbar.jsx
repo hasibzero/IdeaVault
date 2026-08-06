@@ -102,8 +102,9 @@ export default function Navbar() {
                 <DropdownMenuTrigger className="rounded-full outline-none focus:outline-none">
                   <Avatar className="cursor-pointer hover:opacity-80 transition-opacity">
                     <AvatarImage
-                      src={session?.user.image}
-                      alt={session?.user.name}
+                      key={session?.user?.image}
+                      src={session?.user?.image}
+                      alt={session?.user?.name}
                     />
                     <AvatarFallback>{session?.user?.name?.[0]}</AvatarFallback>
                   </Avatar>

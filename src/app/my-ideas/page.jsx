@@ -69,8 +69,9 @@ export default function MyIdeasDashboard() {
 
   useEffect(() => {
     async function getIdeas() {
+      setIsLoading(true);
       try {
-        // /ideas is now public — no auth needed for listing
+        // /ideas is public — no auth header needed for listing
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas`, {
           cache: "no-store",
         });
@@ -87,8 +88,12 @@ export default function MyIdeasDashboard() {
       }
     }
 
-    if (!isSessionPending && currentUserId) {
-      getIdeas();
+    if (!isSessionPending) {
+      if (currentUserId) {
+        getIdeas();
+      } else {
+        setIsLoading(false);
+      }
     }
   }, [currentUserId, isSessionPending]);
 
@@ -214,6 +219,23 @@ export default function MyIdeasDashboard() {
     );
   }
 
+  if (!currentUserId) {
+    return (
+      <main className="w-full max-w-7xl mx-auto px-6 py-24 bg-white dark:bg-[#0a0a0a] min-h-screen flex flex-col items-center justify-center text-center">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Please Log In</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-6">
+          You need to sign in to manage and view your ideas.
+        </p>
+        <Link
+          href="/login"
+          className="px-6 py-3 bg-blue-600 text-white font-semibold text-sm rounded-xl hover:bg-blue-700 transition-colors"
+        >
+          Sign In Now
+        </Link>
+      </main>
+    );
+  }
+
   return (
     <main className="w-full max-w-7xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
@@ -308,7 +330,12 @@ export default function MyIdeasDashboard() {
                 <div className="flex -space-x-2">
                   {idea?.project.author?.avatar ? (
                     <img
-                      src={idea?.project.author.avatar}
+                      key={idea.project.author.avatar}
+                      src={
+                        idea.project.author.avatar.startsWith("data:") || idea.project.author.avatar.startsWith("blob:")
+                          ? idea.project.author.avatar
+                          : `${idea.project.author.avatar}${idea.project.author.avatar.includes("?") ? "&" : "?"}nocache=1`
+                      }
                       alt={idea?.project.author.name}
                       className="w-8 h-8 rounded-full ring-2 ring-white object-cover"
                     />
