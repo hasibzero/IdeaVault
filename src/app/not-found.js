@@ -4,6 +4,11 @@ import { Home, Search } from "lucide-react";
 import Image from "next/image";
 import rocket from "@/lib/rocket.jpg";
 
+export const metadata = {
+  title: "404 Not Found | IdeaVault",
+  description: "The page or idea you are looking for does not exist.",
+};
+
 export default function NotFound() {
   return (
     <main className="min-h-screen  flex flex-col items-center justify-center px-6 py-12 font-sans">
