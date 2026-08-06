@@ -70,9 +70,12 @@ export default function MyIdeasDashboard() {
   useEffect(() => {
     async function getIdeas() {
       setIsLoading(true);
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       try {
-        // /ideas is public — no auth header needed for listing
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas`, {
+        const res = await fetch(`${baseUrl}/ideas`, {
           cache: "no-store",
         });
         const data = await res.json();
@@ -101,7 +104,11 @@ export default function MyIdeasDashboard() {
   const handleDelete = async (ideaId) => {
     try {
       const token = await getToken();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}`, {
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
+      const res = await fetch(`${baseUrl}/ideas/${ideaId}`, {
         method: "DELETE",
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -171,7 +178,11 @@ export default function MyIdeasDashboard() {
 
     try {
       const token = await getToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas/${editingIdea._id}`, {
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
+      const response = await fetch(`${baseUrl}/ideas/${editingIdea._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

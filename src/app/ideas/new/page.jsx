@@ -69,7 +69,11 @@ export default function AddNewIdeaPage() {
         token = result?.data?.token || "";
       } catch {}
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas`, {
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
+      const response = await fetch(`${baseUrl}/ideas`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

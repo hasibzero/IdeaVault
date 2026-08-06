@@ -77,11 +77,15 @@ export default function MyInteractions() {
   useEffect(() => {
     async function fetchInteractions() {
       setIsLoading(true);
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       try {
         const token = await authClient.token().then(r => r?.data?.token || "").catch(() => "");
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/ideas/interactions/my`,
+          `${baseUrl}/ideas/interactions/my`,
           {
             headers: {
               Authorization: token ? `Bearer ${token}` : "",
@@ -119,8 +123,12 @@ export default function MyInteractions() {
   const handleRemoveBookmark = async (ideaId) => {
     try {
       const token = await getToken();
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}/bookmark`,
+        `${baseUrl}/ideas/${ideaId}/bookmark`,
         {
           method: "PATCH",
           headers: {
@@ -158,8 +166,12 @@ export default function MyInteractions() {
 
     try {
       const token = await getToken();
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}/comments/${commentId}`,
+        `${baseUrl}/ideas/${ideaId}/comments/${commentId}`,
         {
           method: "PUT",
           headers: {
@@ -194,8 +206,12 @@ export default function MyInteractions() {
 
     try {
       const token = await getToken();
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}/comments/${commentId}`,
+        `${baseUrl}/ideas/${ideaId}/comments/${commentId}`,
         {
           method: "DELETE",
           headers: {

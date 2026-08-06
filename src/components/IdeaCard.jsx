@@ -53,8 +53,12 @@ export default function IdeaCard({ idea }) {
         token = result?.data?.token || "";
       } catch {}
 
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/ideas/${idea._id}/bookmark`,
+        `${baseUrl}/ideas/${idea._id}/bookmark`,
         {
           method: "PATCH",
           headers: {

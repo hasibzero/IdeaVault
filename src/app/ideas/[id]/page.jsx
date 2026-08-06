@@ -73,8 +73,12 @@ export default function IdeaDetailsPage({ params }) {
   useEffect(() => {
     async function fetchIdea() {
       setIsLoading(true);
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas/${id}`, {
+        const res = await fetch(`${baseUrl}/ideas/${id}`, {
           credentials: "include",
         });
 
@@ -127,8 +131,12 @@ export default function IdeaDetailsPage({ params }) {
         token = result?.data?.token || "";
       } catch {}
 
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/ideas/${idea._id}/bookmark`,
+        `${baseUrl}/ideas/${idea._id}/bookmark`,
         {
           method: "PATCH",
           headers: {
@@ -173,8 +181,12 @@ export default function IdeaDetailsPage({ params }) {
         token = result?.data?.token || "";
       } catch {}
 
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/ideas/${idea._id}/comments`,
+        `${baseUrl}/ideas/${idea._id}/comments`,
         {
           method: "POST",
           headers: {
@@ -219,8 +231,19 @@ export default function IdeaDetailsPage({ params }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500 font-medium">
-        Loading Idea...
+      <div className="w-full max-w-5xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen">
+        <div className="animate-pulse space-y-8">
+          <div className="h-8 w-32 bg-gray-200 dark:bg-gray-800 rounded-md" />
+          <div className="h-72 w-full bg-gray-200 dark:bg-gray-800 rounded-2xl" />
+          <div className="space-y-4">
+            <div className="h-10 w-3/4 bg-gray-200 dark:bg-gray-800 rounded-lg" />
+            <div className="h-5 w-1/2 bg-gray-200 dark:bg-gray-800 rounded-md" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+            <div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+            <div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+          </div>
+        </div>
       </div>
     );
   }
