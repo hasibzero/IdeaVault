@@ -129,7 +129,7 @@ export default function Navbar() {
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <p className="hidden md:inline-flex">Hi, {session?.user.name}</p>
+              <p className="hidden md:inline-flex">Hi, {session?.user?.name}</p>
             </>
           )}
 
