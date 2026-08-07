@@ -109,16 +109,14 @@ export default function MyInteractions() {
       }
     }
 
-    if (!isSessionPending) {
-      if (currentUserId) {
-        fetchInteractions();
-      } else {
-        setBookmarks([]);
-        setComments([]);
-        setIsLoading(false);
-      }
+    if (currentUserId) {
+      fetchInteractions();
+    } else if (!isSessionPending && session === null) {
+      setBookmarks([]);
+      setComments([]);
+      setIsLoading(false);
     }
-  }, [currentUserId, isSessionPending]);
+  }, [currentUserId, session, isSessionPending]);
 
 
   // Remove a bookmarked idea
@@ -236,7 +234,7 @@ export default function MyInteractions() {
   };
   //  ---
 
-  if (isSessionPending) {
+  if (isSessionPending || session === undefined || (currentUserId && (isLoading || bookmarks === null || comments === null))) {
     return (
       <div className="w-full max-w-5xl mx-auto px-4 py-24 min-h-screen flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
@@ -244,7 +242,7 @@ export default function MyInteractions() {
     );
   }
 
-  if (!currentUserId) {
+  if (!isSessionPending && session === null) {
     return (
       <div className="w-full max-w-5xl mx-auto px-4 py-24 min-h-screen flex flex-col items-center justify-center text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Please Log In</h2>
@@ -257,14 +255,6 @@ export default function MyInteractions() {
         >
           Sign In Now
         </Link>
-      </div>
-    );
-  }
-
-  if (isLoading || bookmarks === null || comments === null) {
-    return (
-      <div className="w-full max-w-5xl mx-auto px-4 py-24 min-h-screen flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
       </div>
     );
   }

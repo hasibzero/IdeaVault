@@ -91,15 +91,13 @@ export default function MyIdeasDashboard() {
       }
     }
 
-    if (!isSessionPending) {
-      if (currentUserId) {
-        getIdeas();
-      } else {
-        setIdeas([]);
-        setIsLoading(false);
-      }
+    if (currentUserId) {
+      getIdeas();
+    } else if (!isSessionPending && session === null) {
+      setIdeas([]);
+      setIsLoading(false);
     }
-  }, [currentUserId, isSessionPending]);
+  }, [currentUserId, session, isSessionPending]);
 
   // --- DELETE FUNCTION ---
   const handleDelete = async (ideaId) => {
@@ -221,17 +219,17 @@ export default function MyIdeasDashboard() {
     ? ideas.filter((idea) => idea?.project?.author?.id === currentUserId)
     : [];
 
-  if (isSessionPending) {
+  if (isSessionPending || session === undefined || (currentUserId && (isLoading || ideas === null))) {
     return (
       <main className="w-full max-w-7xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen flex items-center justify-center">
         <div className="text-gray-500 text-sm font-medium">
-          Loading...
+          Loading your ideas...
         </div>
       </main>
     );
   }
 
-  if (!currentUserId) {
+  if (!isSessionPending && session === null) {
     return (
       <main className="w-full max-w-7xl mx-auto px-6 py-24 bg-white dark:bg-[#0a0a0a] min-h-screen flex flex-col items-center justify-center text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Please Log In</h2>
@@ -244,16 +242,6 @@ export default function MyIdeasDashboard() {
         >
           Sign In Now
         </Link>
-      </main>
-    );
-  }
-
-  if (isLoading || ideas === null) {
-    return (
-      <main className="w-full max-w-7xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen flex items-center justify-center">
-        <div className="text-gray-500 text-sm font-medium">
-          Loading your ideas...
-        </div>
       </main>
     );
   }

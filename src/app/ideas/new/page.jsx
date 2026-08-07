@@ -95,7 +95,7 @@ export default function AddNewIdeaPage() {
     }
   };
 
-  if (isPending) {
+  if (isPending || session === undefined) {
     return (
       <div className="w-full max-w-7xl mx-auto px-6 py-24 min-h-screen flex items-center justify-center">
         <div className="text-gray-500 text-sm font-medium">Loading...</div>
@@ -103,7 +103,7 @@ export default function AddNewIdeaPage() {
     );
   }
 
-  if (!session?.user) {
+  if (!isPending && session === null) {
     return (
       <div className="w-full max-w-7xl mx-auto px-6 py-24 min-h-screen flex flex-col items-center justify-center text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Please Log In</h2>
