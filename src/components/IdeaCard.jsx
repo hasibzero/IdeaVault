@@ -146,7 +146,7 @@ export default function IdeaCard({ idea }) {
 
       <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
         <div className="flex -space-x-2">
-          {author?.avatar ? (
+          {typeof author?.avatar === "string" && author.avatar.trim() !== "" ? (
             <img
               key={author.avatar}
               src={
@@ -154,12 +154,12 @@ export default function IdeaCard({ idea }) {
                   ? author.avatar
                   : `${author.avatar}${author.avatar.includes("?") ? "&" : "?"}nocache=1`
               }
-              alt={author?.name || "Author"}
+              alt={typeof author?.name === "string" ? author.name : "Author"}
               className="w-8 h-8 rounded-full ring-2 ring-white dark:ring-gray-900 object-cover"
             />
           ) : (
             <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white dark:ring-gray-900">
-              {author?.name?.charAt(0) || "U"}
+              {typeof author?.name === "string" && author.name ? author.name.charAt(0).toUpperCase() : "U"}
             </div>
           )}
         </div>

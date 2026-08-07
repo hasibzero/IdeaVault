@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { Filter, Search } from "lucide-react";
 import IdeaCard from "@/components/IdeaCard";
 import { Button } from "@/components/ui/button";

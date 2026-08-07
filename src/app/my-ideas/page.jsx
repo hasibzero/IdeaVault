@@ -339,7 +339,7 @@ export default function MyIdeasDashboard() {
                 </span>
 
                 <div className="flex -space-x-2">
-                  {idea?.project.author?.avatar ? (
+                  {typeof idea?.project?.author?.avatar === "string" && idea.project.author.avatar.trim() !== "" ? (
                     <img
                       key={idea.project.author.avatar}
                       src={
@@ -347,12 +347,14 @@ export default function MyIdeasDashboard() {
                           ? idea.project.author.avatar
                           : `${idea.project.author.avatar}${idea.project.author.avatar.includes("?") ? "&" : "?"}nocache=1`
                       }
-                      alt={idea?.project.author.name}
+                      alt={idea?.project?.author?.name || "Author"}
                       className="w-8 h-8 rounded-full ring-2 ring-white object-cover"
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white">
-                      {idea?.project?.author?.name?.charAt(0) || "U"}
+                      {typeof idea?.project?.author?.name === "string" && idea.project.author.name
+                        ? idea.project.author.name.charAt(0).toUpperCase()
+                        : "U"}
                     </div>
                   )}
                 </div>
