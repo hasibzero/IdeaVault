@@ -18,6 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Image from "next/image";
 import Logo from "./../../public/asset/Logo.png";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 // import { router } from "better-auth/api";
 // import { revalidatePath } from "next/cache";
@@ -38,14 +39,16 @@ export default function Navbar() {
   ];
   const router = useRouter();
   const handleLogout = async () => {
-    // "use server";
+    const toastId = toast.loading("Logging out...");
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/login"); // Redirect to login page after logout
-          // revalidatePath("/"); // Revalidate the home page after logout
-          // redirect("/login")// redirect to login page
+          toast.success("Logged out successfully!", { id: toastId });
+          window.location.href = "/login";
         },
+        onError: (ctx) => {
+          toast.error(ctx.error.message || "Logout failed", { id: toastId });
+        }
       },
     });
   };

@@ -56,9 +56,9 @@ export default function RegisterPage() {
 
       React.useEffect(() => {
         if (session?.data?.user) {
-          router.replace("/");
+          window.location.href = "/";
         }
-      }, [router, session?.data?.user]);
+      }, [session?.data?.user]);
     
   
     return (
