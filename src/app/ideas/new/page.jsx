@@ -95,6 +95,31 @@ export default function AddNewIdeaPage() {
     }
   };
 
+  if (isPending) {
+    return (
+      <div className="w-full max-w-7xl mx-auto px-6 py-24 min-h-screen flex items-center justify-center">
+        <div className="text-gray-500 text-sm font-medium">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <div className="w-full max-w-7xl mx-auto px-6 py-24 min-h-screen flex flex-col items-center justify-center text-center">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Please Log In</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-6">
+          You need to sign in to share your ideas.
+        </p>
+        <Link
+          href="/login"
+          className="px-6 py-3 bg-blue-600 text-white font-semibold text-sm rounded-xl hover:bg-blue-700 transition-colors"
+        >
+          Sign In Now
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <main className="w-full min-h-screen bg-[#f8fafc] dark:bg-[#0a0a0a] py-12 px-4 sm:px-6">
       <div className="max-w-3xl mx-auto">

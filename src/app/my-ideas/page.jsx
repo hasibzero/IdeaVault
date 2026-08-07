@@ -95,6 +95,7 @@ export default function MyIdeasDashboard() {
       if (currentUserId) {
         getIdeas();
       } else {
+        setIdeas([]);
         setIsLoading(false);
       }
     }
@@ -220,11 +221,11 @@ export default function MyIdeasDashboard() {
     ? ideas.filter((idea) => idea?.project?.author?.id === currentUserId)
     : [];
 
-  if (isSessionPending || isLoading || ideas === null) {
+  if (isSessionPending) {
     return (
       <main className="w-full max-w-7xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen flex items-center justify-center">
         <div className="text-gray-500 text-sm font-medium">
-          Loading your ideas...
+          Loading...
         </div>
       </main>
     );
@@ -243,6 +244,16 @@ export default function MyIdeasDashboard() {
         >
           Sign In Now
         </Link>
+      </main>
+    );
+  }
+
+  if (isLoading || ideas === null) {
+    return (
+      <main className="w-full max-w-7xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen flex items-center justify-center">
+        <div className="text-gray-500 text-sm font-medium">
+          Loading your ideas...
+        </div>
       </main>
     );
   }

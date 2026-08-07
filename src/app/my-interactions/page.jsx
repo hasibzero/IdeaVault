@@ -113,6 +113,8 @@ export default function MyInteractions() {
       if (currentUserId) {
         fetchInteractions();
       } else {
+        setBookmarks([]);
+        setComments([]);
         setIsLoading(false);
       }
     }
@@ -234,7 +236,7 @@ export default function MyInteractions() {
   };
   //  ---
 
-  if (isSessionPending || isLoading || bookmarks === null || comments === null) {
+  if (isSessionPending) {
     return (
       <div className="w-full max-w-5xl mx-auto px-4 py-24 min-h-screen flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
@@ -255,6 +257,14 @@ export default function MyInteractions() {
         >
           Sign In Now
         </Link>
+      </div>
+    );
+  }
+
+  if (isLoading || bookmarks === null || comments === null) {
+    return (
+      <div className="w-full max-w-5xl mx-auto px-4 py-24 min-h-screen flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
       </div>
     );
   }
