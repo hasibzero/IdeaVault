@@ -44,10 +44,6 @@ function IdeasContent() {
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      const startTime = Date.now();
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
-
       const queryParams = new URLSearchParams();
       if (search) queryParams.append("search", search);
       if (category && category !== "All Categories") {
@@ -65,15 +61,11 @@ function IdeasContent() {
         const [ideasResult, categoriesResult] = await Promise.allSettled([
           fetch(`${baseUrl}/ideas?${queryParams.toString()}`, {
             cache: "no-store",
-            signal: controller.signal,
           }).then((r) => (r.ok ? r.json() : null)),
-          fetch(`${baseUrl}/categories`, {
-            cache: "no-store",
-            signal: controller.signal,
-          }).then((r) => (r.ok ? r.json() : null)),
+          fetch(`${baseUrl}/categories`, { cache: "no-store" }).then((r) =>
+            r.ok ? r.json() : null
+          ),
         ]);
-
-        clearTimeout(timeoutId);
 
         const ideasResponse =
           ideasResult.status === "fulfilled" ? ideasResult.value : null;
@@ -108,14 +100,8 @@ function IdeasContent() {
         );
       } catch (error) {
         console.error("Failed to load ideas:", error);
-        setIdeas([]);
       } finally {
-        clearTimeout(timeoutId);
-        const elapsedTime = Date.now() - startTime;
-        const remainingDelay = Math.max(0, 400 - elapsedTime);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, remainingDelay);
+        setIsLoading(false);
       }
     }
 
