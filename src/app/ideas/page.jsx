@@ -204,10 +204,16 @@ function IdeasContent() {
           <p className="text-xl font-medium text-gray-900 dark:text-white mb-2">
             No ideas found
           </p>
-          <p className="text-gray-500 dark:text-gray-400 text-center max-w-md">
+          <p className="text-gray-500 dark:text-gray-400 text-center max-w-md mb-6">
             We couldn&apos;t find any ideas matching your current filters. Try
             adjusting your search or category!
           </p>
+          <Link
+            href="/ideas"
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg transition-colors"
+          >
+            Clear All Filters
+          </Link>
         </div>
       )}
     </div>

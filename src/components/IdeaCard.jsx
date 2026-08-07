@@ -20,8 +20,20 @@ export default function IdeaCard({ idea }) {
   const { data: session } = authClient.useSession();
   const currentUserId = session?.user?.id;
 
-  const { project, metadata } = idea;
-  const primaryBadge = project?.badges?.[0] || "GENERAL";
+  const project = idea?.project || {};
+  const metadata = idea?.metadata || {};
+
+  const title = project?.title || idea?.title || "Untitled Idea";
+  const tagline =
+    project?.tagline ||
+    idea?.tagline ||
+    idea?.shortDescription ||
+    idea?.description ||
+    "";
+  const badges = project?.badges || idea?.badges || [];
+  const primaryBadge = badges[0] || "GENERAL";
+  const tags = metadata?.tags || idea?.tags || [];
+  const author = project?.author || idea?.author || {};
 
   const [bookmarks, setBookmarks] = useState(idea?.bookmarks || []);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -115,14 +127,14 @@ export default function IdeaCard({ idea }) {
       </div>
 
       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-snug">
-        {project?.title}
+        {title}
       </h3>
       <p className="text-sm dark:text-gray-200 mb-5 line-clamp-3 leading-relaxed">
-        {project?.tagline}
+        {tagline}
       </p>
 
       <div className="flex flex-wrap gap-2 mb-6">
-        {metadata?.tags?.slice(0, 3).map((tag, index) => (
+        {tags?.slice(0, 3).map((tag, index) => (
           <span
             key={index}
             className="text-xs font-medium text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-400 px-2.5 py-1 rounded-full"
@@ -134,20 +146,20 @@ export default function IdeaCard({ idea }) {
 
       <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
         <div className="flex -space-x-2">
-          {project?.author?.avatar ? (
+          {author?.avatar ? (
             <img
-              key={project.author.avatar}
+              key={author.avatar}
               src={
-                project.author.avatar.startsWith("data:") || project.author.avatar.startsWith("blob:")
-                  ? project.author.avatar
-                  : `${project.author.avatar}${project.author.avatar.includes("?") ? "&" : "?"}nocache=1`
+                author.avatar.startsWith("data:") || author.avatar.startsWith("blob:")
+                  ? author.avatar
+                  : `${author.avatar}${author.avatar.includes("?") ? "&" : "?"}nocache=1`
               }
-              alt={project?.author?.name || "Author"}
+              alt={author?.name || "Author"}
               className="w-8 h-8 rounded-full ring-2 ring-white dark:ring-gray-900 object-cover"
             />
           ) : (
             <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white dark:ring-gray-900">
-              {project?.author?.name?.charAt(0) || "U"}
+              {author?.name?.charAt(0) || "U"}
             </div>
           )}
         </div>
