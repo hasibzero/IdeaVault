@@ -8,20 +8,26 @@ import { useRouter } from "next/navigation";
 // import React from 'react';
 
 export default function LoginPage() {
+  const [isPending, setIsPending] = React.useState(false);
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    // console.log(e.currentTarget);
     const formData = new FormData(e.currentTarget);
     const loginData = Object.fromEntries(formData.entries());
+
+    setIsPending(true);
+    const toastId = toast.loading("Logging in...");
 
     const { data, error } = await authClient.signIn.email({
       ...loginData,
     });
+    
+    setIsPending(false);
     if (!error) {
-      toast.success("Login successful!");
+      toast.success("Login successful!", { id: toastId });
     }
     if (error) {
-      toast.error(error.message || "Login failed. Please try again.");
+      toast.error(error.message || "Login failed. Please try again.", { id: toastId });
     }
   };
 
@@ -84,9 +90,10 @@ export default function LoginPage() {
         {/* Submit Button */}
         <Button
           type="submit"
-          className="cursor-pointer w-full py-3 px-4 bg-[#0052cc] hover:bg-blue-800 text-white font-bold rounded-lg transition-colors mt-2"
+          disabled={isPending}
+          className="cursor-pointer w-full py-3 px-4 bg-[#0052cc] hover:bg-blue-800 text-white font-bold rounded-lg transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Log In
+          {isPending ? "Logging in..." : "Log In"}
         </Button>
       </form>
       {/* Divider */}

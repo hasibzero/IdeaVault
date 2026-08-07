@@ -9,6 +9,8 @@ import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
   
+    const [isPending, setIsPending] = React.useState(false);
+
     const handleRegister = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -28,14 +30,19 @@ export default function RegisterPage() {
             return;
         }
 
+        setIsPending(true);
+        const toastId = toast.loading("Creating account...");
+
         const { data, error } = await authClient.signUp.email({
             ...registerData,
         });
+        
+        setIsPending(false);
         if (error) {
-            toast.error(error.message || "Registration failed. Please try again.");
+            toast.error(error.message || "Registration failed. Please try again.", { id: toastId });
             return;
         }
-        toast.success("Registration successful!");
+        toast.success("Registration successful!", { id: toastId });
     }
     const signIn = async () => {
         const data = await authClient.signIn.social({
@@ -118,9 +125,10 @@ export default function RegisterPage() {
 
         <Button
           type="submit" 
-          className="cursor-pointer w-full py-3 px-4 bg-[#0052cc] hover:bg-blue-800 text-white font-bold rounded-lg transition-colors "
+          disabled={isPending}
+          className="cursor-pointer w-full py-3 px-4 bg-[#0052cc] hover:bg-blue-800 text-white font-bold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Create Account
+          {isPending ? "Creating Account..." : "Create Account"}
         </Button>
 
         <div className="relative flex items-center py-4 my-2">
