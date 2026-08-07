@@ -7,7 +7,7 @@ IdeaVault is a modern, high-performance web platform designed for tech innovator
 ## 🌐 Live URL
 
 - **Frontend Deployment**: [https://ideavault-client.vercel.app](https://ideavault-client.vercel.app) *(or your deployed Vercel domain)*
-- **Backend API**: [https://ideavault-server-nu.vercel.app](https://ideavault-server-nu.vercel.app)
+
 
 ---
 
