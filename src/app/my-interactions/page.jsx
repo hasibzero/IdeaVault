@@ -50,8 +50,8 @@ export default function MyInteractions() {
   const { data: session, isPending: isSessionPending } = authClient.useSession();
   const currentUserId = session?.user?.id;
 
-  const [bookmarks, setBookmarks] = useState([]);
-  const [comments, setComments] = useState([]);
+  const [bookmarks, setBookmarks] = useState(null);
+  const [comments, setComments] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("comments"); // Tabs state: "comments" or "bookmarks"
 
@@ -234,7 +234,7 @@ export default function MyInteractions() {
   };
   //  ---
 
-  if (isSessionPending || isLoading) {
+  if (isSessionPending || isLoading || bookmarks === null || comments === null) {
     return (
       <div className="w-full max-w-5xl mx-auto px-4 py-24 min-h-screen flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-blue-600" />

@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 export default function MyIdeasDashboard() {
   const { data: session, isPending: isSessionPending } = authClient.useSession();
-  const [ideas, setIdeas] = useState([]);
+  const [ideas, setIdeas] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [editingIdea, setEditingIdea] = useState(null);
   const [ideaToDelete, setIdeaToDelete] = useState(null);
@@ -216,11 +216,11 @@ export default function MyIdeasDashboard() {
     }
   };
 
-  const myIdeas = ideas.filter(
-    (idea) => idea?.project?.author?.id === currentUserId,
-  );
+  const myIdeas = Array.isArray(ideas)
+    ? ideas.filter((idea) => idea?.project?.author?.id === currentUserId)
+    : [];
 
-  if (isSessionPending || isLoading) {
+  if (isSessionPending || isLoading || ideas === null) {
     return (
       <main className="w-full max-w-7xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen flex items-center justify-center">
         <div className="text-gray-500 text-sm font-medium">

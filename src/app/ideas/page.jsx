@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 function IdeasContent() {
   const searchParams = useSearchParams();
-  const [ideas, setIdeas] = useState([]);
+  const [ideas, setIdeas] = useState(null);
   const [categoriesList, setCategoriesList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -170,7 +170,7 @@ function IdeasContent() {
         </form>
       </div>
 
-      {isLoading ? (
+      {isLoading || ideas === null ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {[1, 2, 3, 4, 5, 6].map((n) => (
             <div

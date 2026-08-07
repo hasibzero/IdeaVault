@@ -4,13 +4,15 @@ import React, { useEffect, useState } from 'react';
 import IdeaCard from '@/components/IdeaCard';
 
 export default function FeaturedIdeasPage() {
-  const [ideas, setIdeas] = useState([]);
+  const [ideas, setIdeas] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function getFeaturedIdeas() {
       setIsLoading(true);
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      ).replace(/\/+$/, "");
 
       try {
         const response = await fetch(`${baseUrl}/featured`, {
@@ -39,7 +41,7 @@ export default function FeaturedIdeasPage() {
 
   return (
     <div className="w-full pt-10 pb-16">
-      {isLoading ? (
+      {isLoading || ideas === null ? (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
           {[1, 2, 3, 4, 5, 6].map((n) => (
             <div
