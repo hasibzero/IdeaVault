@@ -9,21 +9,33 @@ import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
   
-    const handleRegister = async(e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        // console.log('Form Data:', formData);
         const registerData = Object.fromEntries(formData.entries());
-        // console.log('Register Data:', registerData);
+        const password = registerData.password || "";
+
+        if (password.length < 6) {
+            toast.error("Password must be at least 6 characters long.");
+            return;
+        }
+        if (!/[A-Z]/.test(password)) {
+            toast.error("Password must include at least one uppercase letter.");
+            return;
+        }
+        if (!/[a-z]/.test(password)) {
+            toast.error("Password must include at least one lowercase letter.");
+            return;
+        }
+
         const { data, error } = await authClient.signUp.email({
             ...registerData,
-                // callbackUrl: "/",
-            
-        })
+        });
         if (error) {
             toast.error(error.message || "Registration failed. Please try again.");
+            return;
         }
-        toast.success("Registration successful!")
+        toast.success("Registration successful!");
     }
     const signIn = async () => {
         const data = await authClient.signIn.social({
@@ -93,11 +105,14 @@ export default function RegisterPage() {
           <input 
             name="password"
             type="password" 
-            placeholder="Create a strong password" 
+            placeholder="Create a password (min 6 chars, A-Z, a-z)" 
             className="w-full px-4 py-3 bg-white border border-gray-400 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0052cc] focus:border-transparent transition-shadow"
             required
-            minLength={8}
+            minLength={6}
           />
+          <p className="text-[11px] text-gray-500 mt-1">
+            Must be at least 6 characters with uppercase and lowercase letters.
+          </p>
         </div>
 
 
